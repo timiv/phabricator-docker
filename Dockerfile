@@ -4,7 +4,7 @@ FROM debian:jessie-slim
 RUN apt-get update && apt-get -y install \
     git subversion openssh-server openssh-client \
     mysql-client apache2 \
-    php5 php5-mysql php5-gd php5-dev \
+    php5 php5-mysqlnd php5-gd php5-dev \
     php5-curl php5-apcu php5-cli php5-json \
     python-pygments sendmail imagemagick sudo \
     && apt-get clean
@@ -13,10 +13,10 @@ RUN apt-get update && apt-get -y install \
 COPY apache2-phabricator.conf /etc/apache2/sites-available/phabricator.conf
 
 # Copy the run script
-COPY run.sh /opt
 COPY bootstrap.sh /opt
-
 RUN /opt/bootstrap.sh
+
+COPY run.sh /opt
 
 # Expose hosts
 EXPOSE 80 443 2222
