@@ -3,12 +3,26 @@
 
 echo "Bootstrapping..."
 
-# Add users to sudoers
-echo "git ALL=(phd) SETENV: NOPASSWD: /usr/bin/git-upload-pack, /usr/bin/git-receive-pack, /usr/bin/hg, /usr/bin/svnserve" >> /etc/sudoers
-echo "www-data ALL=(phd) SETENV: NOPASSWD: /usr/bin/git-upload-pack, /usr/lib/git-core/git-http-backend, /usr/bin/hg" >> /etc/sudoers
+# Create users
+adduser --no-create-home --disabled-password --gecos "" phab
+adduser --no-create-home --disabled-password --gecos "" git
+adduser phab sudo
 
 # Create folders
 mkdir -p /data/repo && chown phab:phab /data/repo
+mkdir -p /opt && chmod 755 /opt
+
+# Install phabricator
+git clone https://github.com/phacility/libphutil.git && chown -R phab.phab libphutil
+git clone https://github.com/phacility/arcanist.git && chown -R phab.phab arcanist
+git clone https://github.com/phacility/phabricator.git && chown -R phab.phab phabricator
+
+
+# Add users to sudoers
+echo "git ALL=(phab) SETENV: NOPASSWD: /usr/bin/git-upload-pack, /usr/bin/git-receive-pack, /usr/bin/hg, /usr/bin/svnserve" >> /etc/sudoers
+echo "www-data ALL=(phab) SETENV: NOPASSWD: /usr/bin/git-upload-pack, /usr/lib/git-core/git-http-backend, /usr/bin/hg" >> /etc/sudoers
+
+
 
 # Configure apache
 a2enmod rewrite

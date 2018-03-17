@@ -9,19 +9,8 @@ RUN apt-get update && apt-get -y install \
     python-pygments sendmail imagemagick sudo supervisor \
     && apt-get clean
 
-# Create users
-RUN adduser --no-create-home --disabled-password --gecos "" phab
-RUN adduser --no-create-home --disabled-password --gecos "" git
-RUN adduser phab sudo
 
-# Create the base folder
-RUN mkdir -p /opt && chmod 755 /opt
 
-# Install phabricator
-WORKDIR /opt
-RUN git clone https://github.com/phacility/libphutil.git && chown -R phab.phab libphutil
-RUN git clone https://github.com/phacility/arcanist.git && chown -R phab.phab arcanist
-RUN git clone https://github.com/phacility/phabricator.git && chown -R phab.phab phabricator
 
 # Copy the apache2 configuration
 COPY apache2-phabricator.conf /etc/apache2/sites-available/phabricator.conf
