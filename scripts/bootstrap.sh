@@ -13,9 +13,11 @@ mkdir -p /data/repo && chown phab:phab /data/repo
 mkdir -p /opt && chmod 755 /opt
 
 # Install phabricator
+pushd opt
 git clone https://github.com/phacility/libphutil.git && chown -R phab.phab libphutil
 git clone https://github.com/phacility/arcanist.git && chown -R phab.phab arcanist
 git clone https://github.com/phacility/phabricator.git && chown -R phab.phab phabricator
+popd
 
 
 # Add users to sudoers
