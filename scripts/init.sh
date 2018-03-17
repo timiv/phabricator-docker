@@ -22,13 +22,14 @@ if [ ! -f /opt/.bootstrapped ]; then
     set_config mysql.host "${PHAB_MYSQL_HOST}"
     set_config phabricator.base-uri "\"http://${PHAB_DOMAIN}/\""
     set_config phd.user phab
-    set_config environment.append-paths "'[\"/usr/lib/git-core\"]'"
+    set_config environment.append-paths '[\"/usr/lib/git-core\"]'
     set_config diffusion.ssh-user git
     set_config pygments.enabled true
     set_config policy.allow-public true
     set_config diffusion.allow-http-auth false
     set_config phabricator.show-prototypes true
     set_config differential.require-test-plan-field false
+    set_config repository.default-local-path "/data/repo"
 
     sed -i -e "s|__HOST__|${PHAB_DOMAIN}|" /etc/apache2/sites-available/phabricator.conf
 
