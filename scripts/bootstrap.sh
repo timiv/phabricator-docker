@@ -3,19 +3,12 @@
 
 echo "Bootstrapping..."
 
-# Create users
-adduser --no-create-home --disabled-password --gecos "" phab
-adduser phab sudo
-adduser --no-create-home --disabled-password --gecos "" git
-
 # Add users to sudoers
 echo "git ALL=(phd) SETENV: NOPASSWD: /usr/bin/git-upload-pack, /usr/bin/git-receive-pack, /usr/bin/hg, /usr/bin/svnserve" >> /etc/sudoers
 echo "www-data ALL=(phd) SETENV: NOPASSWD: /usr/bin/git-upload-pack, /usr/lib/git-core/git-http-backend, /usr/bin/hg" >> /etc/sudoers
 
 # Create folders
-mkdir -p /opt && chown phab:phab /opt
 mkdir -p /data/repo && chown phab:phab /data/repo
-
 
 # Configure apache
 a2enmod rewrite
@@ -28,13 +21,8 @@ sed -e 's|^[; ]*always_populate_raw_post_data.*$|always_populate_raw_post_data =
     -e 's|^[; ]*date.timezone.*$|date.timezone = Europe/Berlin|' \
     -i /etc/php5/apache2/php.ini
 
-# Install phabricator
-cd /opt
-su phab -c "git clone https://github.com/phacility/libphutil.git && cd libphutil && git pull --rebase"
-su phab -c "git clone https://github.com/phacility/arcanist.git && cd arcanist && git pull --rebase"
-su phab -c "git clone https://github.com/phacility/phabricator.git && cd phabricator && git pull --rebase"
 
-# Configure git
+# Configure ssh access
 cp /opt/phabricator/resources/sshd/sshd_config.phabricator.example /etc/ssh/sshd_config
 sed -e 's|^AuthorizedKeysCommand .*$|AuthorizedKeysCommand /opt/sshd/phabricator-ssh-hook.sh|' \
     -e 's|vcs-user|git|' \
