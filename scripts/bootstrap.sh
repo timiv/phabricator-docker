@@ -19,6 +19,13 @@ git clone https://github.com/phacility/arcanist.git && chown -R phab.phab arcani
 git clone https://github.com/phacility/phabricator.git && chown -R phab.phab phabricator
 popd
 
+# Symlink the configuration folder
+mkdir -p /data/phabricator/conf
+cp -R /opt/phabricator/conf/* /data/phabricator/conf
+rm -Rf /opt/phabricator/conf
+ln -sf /data/phabricator/conf /opt/phabricator/conf
+chown -R phab.phab /data/phabricator/conf
+
 
 # Add users to sudoers
 echo "git ALL=(phab) SETENV: NOPASSWD: /usr/bin/git-upload-pack, /usr/bin/git-receive-pack, /usr/bin/hg, /usr/bin/svnserve" >> /etc/sudoers
